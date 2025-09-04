@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(bodyParser.json());
@@ -26,8 +26,8 @@ const openApiSpec = {
   },
   servers: [
     {
-      url: "http://localhost:8080",
-      description: "Mock server"
+      url: "/",
+      description: "Current server"
     }
   ],
   paths: {
