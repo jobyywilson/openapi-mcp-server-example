@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
