@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(bodyParser.json());
@@ -15,6 +15,18 @@ let companies = [
   { id: 2, name: "Beta Ltd", industry: "Finance", address: "456 Finance Road" }
 ];
 let nextId = 3;
+
+// Function to reset companies array
+function resetCompanies() {
+  companies = [
+    { id: 1, name: "Acme Corp", industry: "Technology", address: "123 Tech Lane" },
+    { id: 2, name: "Beta Ltd", industry: "Finance", address: "456 Finance Road" }
+  ];
+  nextId = 3;
+}
+
+// Initial reset
+resetCompanies();
 
 // OpenAPI Spec (inline JSON)
 const openApiSpec = {
@@ -192,17 +204,17 @@ const openApiSpec = {
   }
 };
 
+// Expose OpenAPI JSON
+app.get("/rest/v1/metadata-catalog/companies/openapi.json", (req, res) => {
+  res.json(openApiSpec);
+});
+
 // Expose Swagger UI at /rest/v1/metadata-catalog/companies
 app.use(
   "/rest/v1/metadata-catalog/companies",
   swaggerUi.serve,
   swaggerUi.setup(openApiSpec)
 );
-
-// Expose OpenAPI JSON
-app.get("/rest/v1/metadata-catalog/companies/openapi.json", (req, res) => {
-  res.json(openApiSpec);
-});
 
 // ------------------- API Routes -------------------
 
@@ -260,4 +272,8 @@ app.delete("/rest/v1/companies/:companyId", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
   console.log(`📖 Swagger docs at http://localhost:${PORT}/rest/v1/metadata-catalog/companies`);
+
+  // Reset companies every hour
+  setInterval(resetCompanies, 3600000);
+  console.log('Scheduled hourly reset of companies array');
 });
